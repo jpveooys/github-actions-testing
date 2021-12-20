@@ -14,31 +14,29 @@ describe('DatePickerE', () => {
         '/iframe.html?id=date-picker-experimental--default&viewMode=story'
       )
 
-      cy.get(selectors.datePicker.button).click()
+      cy.get(selectors.datePickerE.button).click()
     })
 
     it('should show the days', () => {
-      cy.get(selectors.datePicker.floatingBox, { timeout: 15000 }).should(
+      cy.get(selectors.datePickerE.floatingBox, { timeout: 15000 }).should(
         'be.visible'
       )
     })
 
     describe('and the first day is clicked', () => {
       before(() => {
-        cy.get(selectors.datePicker.day.inside)
-          .contains('1')
-          .click({ force: true })
+        cy.get(selectors.datePickerE.day).contains('1').click({ force: true })
       })
 
       it('should set the value of the input to the date', () => {
         const from = startOfMonth(new Date())
         const expected = transformDates(from, null, DATE_FORMAT.SHORT)
 
-        cy.get(selectors.datePicker.input).should('have.value', expected)
+        cy.get(selectors.datePickerE.input).should('have.value', expected)
       })
 
       it('should not be in an error state', () => {
-        cy.get(selectors.datePicker.outerWrapper).should(
+        cy.get(selectors.datePickerE.outerWrapper).should(
           'have.css',
           'box-shadow',
           `${hexToRgb(ColorNeutral200)} 0px 0px 0px 1px`
@@ -51,22 +49,22 @@ describe('DatePickerE', () => {
     before(() => {
       cy.visit('/iframe.html?id=date-picker-experimental--range&viewMode=story')
 
-      cy.get(selectors.datePicker.input).click()
+      cy.get(selectors.datePickerE.input).click()
     })
 
     it('should show the days', () => {
-      cy.get(selectors.datePicker.floatingBox).should('be.visible')
+      cy.get(selectors.datePickerE.floatingBox).should('be.visible')
     })
 
     describe('and the `from` day is clicked', () => {
       before(() => {
-        cy.get(selectors.datePicker.day.inside).contains('1').click()
+        cy.get(selectors.datePickerE.day).contains('1').click()
       })
 
       it('should set the value of the input to the date', () => {
         const expectedDate = startOfMonth(new Date())
 
-        cy.get(selectors.datePicker.input).should(
+        cy.get(selectors.datePickerE.input).should(
           'have.value',
           format(expectedDate, DATE_FORMAT.SHORT)
         )
@@ -74,7 +72,7 @@ describe('DatePickerE', () => {
 
       describe('and the `to` day is clicked', () => {
         before(() => {
-          cy.get(selectors.datePicker.day.inside).contains('10').click()
+          cy.get(selectors.datePickerE.day).contains('10').click()
         })
 
         it('should set the value of the input to the range', () => {
@@ -82,18 +80,18 @@ describe('DatePickerE', () => {
           const to = addDays(from, 9)
           const expected = transformDates(from, to, DATE_FORMAT.SHORT)
 
-          cy.get(selectors.datePicker.input).should('have.value', expected)
+          cy.get(selectors.datePickerE.input).should('have.value', expected)
         })
 
         describe('and the picker is closed', () => {
           before(() => {
-            cy.get(selectors.datePicker.button).click()
+            cy.get(selectors.datePickerE.button).click()
 
             cy.wait(1000)
           })
 
           it('should not be in an error state', () => {
-            cy.get(selectors.datePicker.outerWrapper).should(
+            cy.get(selectors.datePickerE.outerWrapper).should(
               'have.css',
               'box-shadow',
               `${hexToRgb(ColorNeutral200)} 0px 0px 0px 1px`

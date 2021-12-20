@@ -21,6 +21,8 @@ const NOW = '2019-12-05T11:00:00.000Z'
 const ERROR_BOX_SHADOW = `0 0 0 ${
   BORDER_WIDTH[COMPONENT_SIZE.FORMS]
 } ${ColorDanger800.toUpperCase()}`
+const PREVIOUS_MONTH_BUTTON_LABEL = 'Go to previous month'
+const NEXT_MONTH_BUTTON_LABEL = 'Go to next month'
 
 function formatDate(date: Date | null) {
   return isValid(date) ? format(date, 'dd/MM/yyyy') : ''
@@ -31,7 +33,6 @@ describe('DatePickerE', () => {
   let initialStartDate: Date
   let label: string
   let onBlur: (e: React.FormEvent) => void
-  let onCalendarFocus: (e: React.SyntheticEvent) => void
   let days: string[]
   let onSubmitSpy: (e: React.FormEvent) => void
   const onChange = jest.fn<void, [DatePickerEOnChangeData]>()
@@ -73,7 +74,6 @@ describe('DatePickerE', () => {
     beforeEach(() => {
       initialStartDate = new Date(2019, 11, 1)
       onBlur = jest.fn()
-      onCalendarFocus = jest.fn()
 
       wrapper = render(
         <>
@@ -81,7 +81,6 @@ describe('DatePickerE', () => {
             initialStartDate={initialStartDate}
             onChange={onChange}
             onBlur={onBlur}
-            onCalendarFocus={onCalendarFocus}
           />
           <div data-testid="datepicker-outside" />
         </>
@@ -281,8 +280,9 @@ describe('DatePickerE', () => {
                 })
 
                 it('focuses the picker container', () => {
-                  expect(onCalendarFocus).toHaveBeenCalledTimes(1)
-                  // NOTE: `react-day-picker` internals from here on down
+                  expect(
+                    wrapper.getByLabelText(PREVIOUS_MONTH_BUTTON_LABEL)
+                  ).toHaveFocus()
                 })
               })
 
@@ -603,23 +603,21 @@ describe('DatePickerE', () => {
 
     it('focuses the previous month button', () => {
       return waitFor(() =>
-        expect(wrapper.getByLabelText('Previous Month')).toHaveFocus()
+        expect(
+          wrapper.getByLabelText(PREVIOUS_MONTH_BUTTON_LABEL)
+        ).toHaveFocus()
       )
     })
 
-    describe('when the day picker is focused and Shift-Tab is pressed', () => {
-      let dayPicker: Element
-
+    describe('when Shift-Tab is pressed', () => {
       beforeEach(() => {
-        dayPicker = wrapper.container.querySelectorAll('.DayPicker-wrapper')[0]
-
-        fireEvent.focus(dayPicker)
-
         userEvent.tab({ shift: true })
       })
 
       it('traps the focus within the picker', () => {
-        expect(wrapper.getByText('1')).toHaveFocus()
+        expect(
+          wrapper.getByRole('button', { name: '5th December (Thursday)' })
+        ).toHaveFocus()
       })
 
       describe('and Tab is then pressed', () => {
@@ -628,27 +626,26 @@ describe('DatePickerE', () => {
         })
 
         it('still traps the focus within the picker', () => {
-          expect(dayPicker).toHaveFocus()
+          expect(
+            wrapper.getByLabelText(PREVIOUS_MONTH_BUTTON_LABEL)
+          ).toHaveFocus()
         })
       })
     })
 
     describe.each([
       {
-        name: 'day picker container',
-        selector: () =>
-          wrapper.container.querySelectorAll('.DayPicker-wrapper')[0],
-      },
-      {
         name: 'previous month button',
-        selector: () => wrapper.getByLabelText('Previous Month'),
+        selector: () => wrapper.getByLabelText(PREVIOUS_MONTH_BUTTON_LABEL),
       },
       {
         name: 'day picker day',
-        selector: () => wrapper.getByText(10),
+        selector: () =>
+          wrapper.getByRole('button', { name: '10th December (Tuesday)' }),
       },
     ])('when the escape key is pressed in $name', ({ selector }) => {
       beforeEach(() => {
+        const element = selector()
         userEvent.type(selector(), '{esc}')
       })
 
@@ -667,7 +664,7 @@ describe('DatePickerE', () => {
 
     describe('when the next month button is clicked', () => {
       beforeEach(() => {
-        userEvent.click(wrapper.getByLabelText('Next Month'))
+        userEvent.click(wrapper.getByLabelText(NEXT_MONTH_BUTTON_LABEL))
       })
 
       it('displays the next month', () => {
@@ -760,16 +757,16 @@ describe('DatePickerE', () => {
 
         it('shades the date range', () => {
           expect(
-            wrapper.getAllByText(/^10|11|12|13$/, {
-              selector: '.DayPicker-Day--selected',
+            wrapper.getAllByText(/^10|11|12|13$/g, {
+              selector: '.rdp-day_selected span',
             })
           ).toHaveLength(4)
         })
 
         it("doesn't shade dates outside the range", () => {
           expect(
-            wrapper.queryAllByText(/^(?!(10|11|12|13))\d\d$/, {
-              selector: '.DayPicker-Day--selected',
+            wrapper.queryAllByText(/^(?!(10|11|12|13))\d\d$/g, {
+              selector: '.rdp-day_selected span',
             })
           ).toHaveLength(0)
         })
@@ -794,16 +791,16 @@ describe('DatePickerE', () => {
 
         it('shades the date range', () => {
           expect(
-            wrapper.getAllByText(/^10|11|12|13$/, {
-              selector: '.DayPicker-Day--selected',
+            wrapper.getAllByText(/^10|11|12|13$/g, {
+              selector: '.rdp-day_selected span',
             })
           ).toHaveLength(4)
         })
 
         it("doesn't shade dates outside the range", () => {
           expect(
-            wrapper.queryAllByText(/^(?!(10|11|12|13))\d\d$/, {
-              selector: '.DayPicker-Day--selected',
+            wrapper.queryAllByText(/^(?!(10|11|12|13))\d\d$/g, {
+              selector: '.rdp-day_selected span',
             })
           ).toHaveLength(0)
         })
@@ -994,12 +991,17 @@ describe('DatePickerE', () => {
     })
 
     it('applies the disabled modifier class to the correct days', () => {
-      expect(wrapper.getByText('12')).toHaveClass('DayPicker-Day--disabled')
+      expect(
+        wrapper.getByRole('button', { name: '12th April (Sunday)' })
+      ).toHaveClass('rdp-day_disabled')
     })
 
     describe('and a disabled day is clicked', () => {
       beforeEach(() => {
-        userEvent.click(wrapper.getByText('12'), undefined, {
+        const button = wrapper.getByRole('button', {
+          name: '12th April (Sunday)',
+        })
+        userEvent.click(button, undefined, {
           skipPointerEventsCheck: true,
         })
       })
