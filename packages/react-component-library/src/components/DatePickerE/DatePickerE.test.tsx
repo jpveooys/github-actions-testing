@@ -804,6 +804,19 @@ describe('DatePickerE', () => {
             })
           ).toHaveLength(0)
         })
+
+        describe('and then presses the tab key', () => {
+          beforeEach(() => {
+            userEvent.tab()
+          })
+
+          it('clears the range and removes the shading', () => {
+            // The start date still has the modifier
+            expect(
+              wrapper.container.querySelectorAll('.rdp-day_selected')
+            ).toHaveLength(1)
+          })
+        })
       })
 
       describe('and clicks on a second date', () => {
