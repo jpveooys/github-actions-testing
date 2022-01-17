@@ -16,6 +16,7 @@ import { BORDER_WIDTH } from '../../styled-components'
 import { COMPONENT_SIZE } from '../Forms'
 import { DatePickerE, DatePickerEOnChangeData } from '.'
 import { DATE_VALIDITY } from './constants'
+import { RETURN } from '../../utils/keyCodes'
 
 const NOW = '2019-12-05T11:00:00.000Z'
 const ERROR_BOX_SHADOW = `0 0 0 ${
@@ -590,6 +591,22 @@ describe('DatePickerE', () => {
     })
   })
 
+  describe('when a single date picker with a value is rendered and the picker is opened', () => {
+    beforeEach(() => {
+      wrapper = render(
+        <DatePickerE startDate={new Date('2022-01-18T00:00:00Z')} />
+      )
+
+      userEvent.click(wrapper.getByTestId('datepicker-input-button'))
+    })
+
+    it('focuses the current date', () => {
+      expect(
+        wrapper.getByRole('button', { name: '18th January (Tuesday)' })
+      ).toHaveFocus()
+    })
+  })
+
   describe('when a single date picker is rendered and the picker is opened', () => {
     beforeEach(() => {
       wrapper = render(<DatePickerE />)
@@ -601,33 +618,31 @@ describe('DatePickerE', () => {
       expect(wrapper.getByText('December 2019')).toBeInTheDocument()
     })
 
-    it('focuses the previous month button', () => {
-      return waitFor(() =>
-        expect(
-          wrapper.getByLabelText(PREVIOUS_MONTH_BUTTON_LABEL)
-        ).toHaveFocus()
-      )
+    it('focuses the current date', () => {
+      expect(
+        wrapper.getByRole('button', { name: '5th December (Thursday)' })
+      ).toHaveFocus()
     })
 
-    describe('when Shift-Tab is pressed', () => {
+    describe('when Tab is pressed', () => {
       beforeEach(() => {
-        userEvent.tab({ shift: true })
+        userEvent.tab()
       })
 
       it('traps the focus within the picker', () => {
         expect(
-          wrapper.getByRole('button', { name: '5th December (Thursday)' })
+          wrapper.getByLabelText(PREVIOUS_MONTH_BUTTON_LABEL)
         ).toHaveFocus()
       })
 
-      describe('and Tab is then pressed', () => {
+      describe('and Shift-Tab is then pressed', () => {
         beforeEach(() => {
-          userEvent.tab()
+          userEvent.tab({ shift: true })
         })
 
         it('still traps the focus within the picker', () => {
           expect(
-            wrapper.getByLabelText(PREVIOUS_MONTH_BUTTON_LABEL)
+            wrapper.getByRole('button', { name: '5th December (Thursday)' })
           ).toHaveFocus()
         })
       })
@@ -645,7 +660,6 @@ describe('DatePickerE', () => {
       },
     ])('when the escape key is pressed in $name', ({ selector }) => {
       beforeEach(() => {
-        const element = selector()
         userEvent.type(selector(), '{esc}')
       })
 
@@ -923,7 +937,7 @@ describe('DatePickerE', () => {
     // in range mode
     describe('and return is pressed in the input', () => {
       beforeEach(() => {
-        userEvent.type(input, '{enter}')
+        fireEvent.keyDown(input, { keyCode: RETURN })
       })
 
       it('the input value is unchanged', () => {

@@ -342,6 +342,7 @@ export const DatePickerE: React.FC<DatePickerEProps> = ({
               onDayMouseLeave={handleDayBlurOrMouseLeave}
               onDayFocus={handleDayFocusOrMouseEnter}
               onDayBlur={handleDayBlurOrMouseLeave}
+              initialFocus
             />
           </div>
         </FocusTrap>
