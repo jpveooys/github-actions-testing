@@ -4,14 +4,16 @@ import { CheckboxRadioVariantType } from './types'
 
 export interface CheckboxRootProps extends React.HTMLAttributes<HTMLElement> {
   $hasContainer?: boolean
+  $isChecked?: boolean
   $isDisabled?: boolean
   $isInvalid?: boolean
-  $isChecked?: boolean
   className?: string
 }
 
 export interface CheckmarkProps {
   $hasContainer?: boolean
+  $isChecked?: boolean
+  $isDisabled?: boolean
 }
 
 export interface CheckboxRadioBaseProps

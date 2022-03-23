@@ -54,26 +54,37 @@ export const StyledCheckmark = styled.div<CheckmarkProps>`
     `
   }}
 
-  ${StyledCheckbox} input:checked ~ & {
-    background-color: ${color('action', '500')};
-    border: 1px solid ${color('action', '500')};
-    text-align: center;
+  ${({ $isChecked, $isDisabled }) =>
+    css`
+      ${$isChecked &&
+      css`
+        background-color: ${color('action', '500')};
+        border: 1px solid ${color('action', '500')};
+        text-align: center;
 
-    &::after {
-      display: block;
-    }
-  }
+        &::after {
+          display: block;
+        }
+      `}
 
-  ${StyledCheckbox} input:disabled ~ & {
-    background-color: ${color('neutral', '000')};
-    border-color: ${color('neutral', '200')};
+      ${$isDisabled &&
+      css`
+        background-color: ${color('neutral', '000')};
+        border-color: ${color('neutral', '200')};
 
-    &::before {
-      box-shadow: none;
-    }
-  }
+        &::before {
+          box-shadow: none;
+        }
+      `}
 
-  ${StyledCheckbox} input:disabled:checked ~ & {
-    background-color: ${color('neutral', '200')};
-  }
+      ${$isDisabled &&
+      css`
+        background-color: ${color('neutral', $isChecked ? '200' : '000')};
+        border-color: ${color('neutral', '200')};
+
+        &::before {
+          box-shadow: none;
+        }
+      `}
+    `}
 `

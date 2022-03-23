@@ -96,8 +96,6 @@ export const CheckboxRadioBase = React.forwardRef<
       <StyledWrapper>
         <Root
           className={className}
-          role={type}
-          aria-checked={isChecked}
           $isDisabled={isDisabled}
           $hasContainer={hasContainer}
           $isInvalid={isInvalid}
@@ -113,20 +111,25 @@ export const CheckboxRadioBase = React.forwardRef<
               htmlFor={id}
               data-testid={`${type}-label`}
             >
-              <StyledInput
-                ref={mergeRefs([localRef, ref])}
-                defaultChecked={defaultChecked}
-                id={id}
-                type={type}
-                name={name}
-                value={value}
-                onChange={handleOnChange}
-                onBlur={onBlur}
-                disabled={isDisabled}
-                data-testid={`${type}-input`}
-                {...rest}
-              />
-              <Checkmark $hasContainer={hasContainer} />
+              <Checkmark
+                $hasContainer={hasContainer}
+                $isChecked={isChecked}
+                $isDisabled={isDisabled}
+              >
+                <StyledInput
+                  ref={mergeRefs([localRef, ref])}
+                  defaultChecked={defaultChecked}
+                  id={id}
+                  type={type}
+                  name={name}
+                  value={value}
+                  onChange={handleOnChange}
+                  onBlur={onBlur}
+                  disabled={isDisabled}
+                  data-testid={`${type}-input`}
+                  {...rest}
+                />
+              </Checkmark>
               {label}
               {description && (
                 <StyledDescription data-testid={`${type}-description`}>

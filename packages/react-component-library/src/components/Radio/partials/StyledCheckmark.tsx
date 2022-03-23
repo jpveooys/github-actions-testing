@@ -1,13 +1,11 @@
 import styled from 'styled-components'
 import { selectors } from '@defencedigital/design-tokens'
 
+import { CheckmarkProps } from '../../CheckboxRadioBase'
+
 const { color } = selectors
 
-interface StyledCheckmarkProps {
-  $hasContainer?: boolean
-}
-
-export const StyledCheckmark = styled.div<StyledCheckmarkProps>`
+export const StyledCheckmark = styled.div<CheckmarkProps>`
   position: absolute;
   top: ${({ $hasContainer }) => ($hasContainer ? '13px' : '4px')};
   left: ${({ $hasContainer }) => ($hasContainer ? '12px' : '4px')};
