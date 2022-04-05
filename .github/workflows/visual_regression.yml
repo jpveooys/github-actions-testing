@@ -1,4 +1,4 @@
-name: SonarCloud scan
+name: Visual regression tests
 
 on:
   workflow_run:
