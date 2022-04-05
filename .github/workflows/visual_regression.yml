@@ -1,0 +1,58 @@
+name: SonarCloud scan
+
+on:
+  workflow_run:
+    types:
+      - completed
+    workflows:
+      - 'Build & Test'
+
+jobs:
+  test_visual_regression:
+    name: Run visual regression tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Git clone repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Cache Node modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ secrets.CACHE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: 'Download pre-built Storybook'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            const matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "storybook-static"
+            })[0];
+            const download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            const fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/storybook-static.zip`, Buffer.from(download.data));
+
+      - name: 'Unzip pre-built Storybook'
+        run: unzip storybook-static.zip -d packages/react-component-library/.static_storybook
+
+      - name: Run visual regression tests
+        run: |
+          cd packages/react-component-library
+          npx --no chromatic --storybook-build-dir .static_storybook --branch-name ${{ github.event.workflow_run.pull_requests[0].head.label }}
