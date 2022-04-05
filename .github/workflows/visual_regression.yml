@@ -55,6 +55,8 @@ jobs:
       - name: Run visual regression tests
         env:
           CHROMATIC_SHA: ${{ github.event.workflow_run.head_sha }}
+          CHROMATIC_BRANCH: ${{ github.event.workflow_run.pull_requests[0].head.label }}
+          CHROMATIC_SLUG: ${{ github.repository }}
         run: |
           cd packages/react-component-library
-          npm exec --no chromatic -- --project-token ${{secrets.CHROMATIC_TOKEN}} --storybook-build-dir .static_storybook --branch-name ${{ github.event.workflow_run.pull_requests[0].head.label }}
+          npm exec --no chromatic -- --project-token ${{secrets.CHROMATIC_TOKEN}} --storybook-build-dir .static_storybook
