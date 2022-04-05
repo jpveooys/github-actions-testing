@@ -57,4 +57,4 @@ jobs:
           CHROMATIC_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
           cd packages/react-component-library
-          npx --no chromatic --storybook-build-dir .static_storybook --branch-name ${{ github.event.workflow_run.pull_requests[0].head.label }} --project-token=${{secrets.CHROMATIC_TOKEN}}
+          npx --no chromatic --storybook-build-dir .static_storybook --branch-name ${{ github.event.workflow_run.pull_requests[0].head.label }} --project-token ${{secrets.CHROMATIC_TOKEN}}
