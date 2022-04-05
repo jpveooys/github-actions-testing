@@ -248,4 +248,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: storybook-static
-          path: .static_storybook
+          path: packages/react-component-library/.static_storybook
