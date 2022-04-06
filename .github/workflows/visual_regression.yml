@@ -52,6 +52,13 @@ jobs:
       - name: 'Unzip pre-built Storybook'
         run: unzip storybook-static.zip -d packages/react-component-library/.static_storybook
 
+      - name: Dump context
+        env:
+          GITHUB_EVENT_CONTEXT: ${{ toJson(github.event) }}
+        run: |
+          echo -e "$GITHUB_EVENT_CONTEXT"
+
+      shell: bash
       - name: Run visual regression tests
         env:
           CHROMATIC_SHA: ${{ github.event.workflow_run.head_sha }}
