@@ -35,7 +35,7 @@ PrimaryDisabled.storyName = 'Primary, disabled'
 PrimaryDisabled.args = {
   variant: BUTTON_VARIANT.PRIMARY,
   isDisabled: true,
-  children: 'Primary, disabled',
+  children: 'Primary, disabled, changed',
 }
 
 export const PrimaryLoading = Template.bind({})
