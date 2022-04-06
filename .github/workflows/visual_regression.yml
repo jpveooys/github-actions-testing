@@ -70,4 +70,3 @@ jobs:
           projectToken: ${{secrets.CHROMATIC_TOKEN}}
           workingDir: packages/react-component-library
           storybookBuildDir: .static_storybook
-          exitZeroOnChanges: false

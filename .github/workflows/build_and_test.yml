@@ -7,6 +7,9 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  ORIGINAL_GITHUB_REF: ${{ env.GITHUB_REF }}
+
 jobs:
   Build_icon_library:
     runs-on: ubuntu-latest
