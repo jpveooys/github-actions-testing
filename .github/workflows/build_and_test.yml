@@ -61,7 +61,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug
-        run: echo "$GITHUB_REF"
+        run: |
+          echo "$GITHUB_REF"
+          echo "${{ github.head_ref }}"
+          echo "${{ github.ref_name }}"
 
   Check_commits:
     runs-on: ubuntu-latest
