@@ -62,7 +62,8 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "$GITHUB_REF"
+          echo "${{ env.GITHUB_REF }}"
+          echo "${{ github.event.pull_request.head.label }}"
           echo "${{ github.head_ref }}"
           echo "${{ github.ref_name }}"
 
