@@ -27,7 +27,7 @@ Default.args = {
 export const Primary = Template.bind({})
 Primary.args = {
   variant: BUTTON_VARIANT.PRIMARY,
-  children: 'Primary',
+  children: 'Primary changed',
 }
 
 export const PrimaryDisabled = Template.bind({})
