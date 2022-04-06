@@ -64,7 +64,7 @@ jobs:
       - uses: chromaui/action@v1
         name: Run visual regression tests
         env:
-          GITHUB_EVENT_CONTEXT: ${{ toJson(github.event) }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_SHA: ${{ github.event.workflow_run.head_sha }}
           GITHUB_REF: ${{ env.PR_NUMBER && format('refs/pull/{0}/merge', env.PR_NUMBER) || format('refs/heads/{0}', env.HEAD_BRANCH) }}
         with:
