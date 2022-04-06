@@ -249,6 +249,7 @@ jobs:
         run: |
           tar -xzf dist.tar.gz && mv distil packages/icon-library/dist && mv distdt packages/design-tokens/dist
           yarn --cwd packages/react-component-library storybook:static
+          echo "$GITHUB_REF" > packages/react-component-library/.static_storybook/github_ref
 
       - name: Upload Storybook artifact
         uses: actions/upload-artifact@v3
