@@ -7,9 +7,6 @@ on:
       - master
   workflow_dispatch:
 
-env:
-  ORIGINAL_GITHUB_REF: ${{ env.GITHUB_REF }}
-
 jobs:
   Build_icon_library:
     runs-on: ubuntu-latest
@@ -59,6 +56,12 @@ jobs:
 
       - name: Run audit
         run: yarn run audit
+
+  Debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: echo "$GITHUB_REF"
 
   Check_commits:
     runs-on: ubuntu-latest
