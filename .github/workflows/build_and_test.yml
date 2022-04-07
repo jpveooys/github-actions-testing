@@ -61,11 +61,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       EVENT_DATA: ${{ toJson(github.event) }}
-      ENV: ${{ toJson(env) }}
     steps:
       - name: Debug
         run: |
           echo "${{ env.GITHUB_REF }}"
+          echo "${{ env.GITHUB_SHA }}"
+          echo "${{ env.GITHUB_REF_NAME }}"
+          echo "${{ env.GITHUB_HEAD_REF }}"
+          echo "${{ env.GITHUB_REPOSITORY }}"
           echo "${{ github.event.pull_request.head.label }}"
           echo "${{ github.head_ref }}"
           echo "${{ github.ref_name }}"
