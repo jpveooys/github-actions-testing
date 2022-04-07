@@ -64,11 +64,11 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "${{ env.GITHUB_REF }}"
-          echo "${{ env.GITHUB_SHA }}"
-          echo "${{ env.GITHUB_REF_NAME }}"
-          echo "${{ env.GITHUB_HEAD_REF }}"
-          echo "${{ env.GITHUB_REPOSITORY }}"
+          echo "$GITHUB_REF"
+          echo "$GITHUB_SHA"
+          echo "$GITHUB_REF_NAME"
+          echo "$GITHUB_HEAD_REF"
+          echo "$GITHUB_REPOSITORY"
           echo "${{ github.event.pull_request.head.label }}"
           echo "${{ github.head_ref }}"
           echo "${{ github.ref_name }}"
