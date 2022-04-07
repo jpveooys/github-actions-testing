@@ -52,8 +52,10 @@ jobs:
       - name: 'Unzip pre-built Storybook'
         run: |
           unzip storybook-static.zip -d packages/react-component-library/.static_storybook
-          ORIGINAL_GITHUB_REF=$(<packages/react-component-library/.static_storybook/github_ref)
+          ORIGINAL_REF=$(<packages/react-component-library/.static_storybook/ref)
+          ORIGINAL_HEAD_LABEL=$(<packages/react-component-library/.static_storybook/head_label)
           echo "ORIGINAL_GITHUB_REF=$ORIGINAL_GITHUB_REF" >> $GITHUB_ENV
+          echo "ORIGINAL_HEAD_LABEL=$ORIGINAL_HEAD_LABEL" >> $GITHUB_ENV
 
       - name: Fetch original ref
         run: |
