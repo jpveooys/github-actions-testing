@@ -256,11 +256,16 @@ jobs:
           name: dist
 
       - name: Build Storybook
+        env:
+          CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CHROMATIC_BRANCH: ${{ github.head_ref || github.ref_name }}
+          CHROMATIC_SLUG: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           tar -xzf dist.tar.gz && mv distil packages/icon-library/dist && mv distdt packages/design-tokens/dist
           yarn --cwd packages/react-component-library storybook:static
-          echo "$GITHUB_REF" > packages/react-component-library/.static_storybook/ref
-          echo "${{ github.event.pull_request.head.label }}" > packages/react-component-library/.static_storybook/head_label
+          echo "$CHROMATIC_SHA" > packages/react-component-library/.static_storybook/sha
+          echo "$CHROMATIC_BRANCH" > packages/react-component-library/.static_storybook/branch
+          echo "$CHROMATIC_SLUG" > packages/react-component-library/.static_storybook/slug
 
       - name: Upload Storybook artifact
         uses: actions/upload-artifact@v3

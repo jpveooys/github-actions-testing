@@ -52,21 +52,15 @@ jobs:
       - name: 'Unzip pre-built Storybook'
         run: |
           unzip storybook-static.zip -d packages/react-component-library/.static_storybook
-          ORIGINAL_REF=$(<packages/react-component-library/.static_storybook/ref)
-          ORIGINAL_HEAD_LABEL=$(<packages/react-component-library/.static_storybook/head_label)
-          echo "ORIGINAL_GITHUB_REF=$ORIGINAL_GITHUB_REF" >> $GITHUB_ENV
-          echo "ORIGINAL_HEAD_LABEL=$ORIGINAL_HEAD_LABEL" >> $GITHUB_ENV
+          echo "CHROMATIC_SHA=$(<packages/react-component-library/.static_storybook/sha)" >> $GITHUB_ENV
+          echo "CHROMATIC_BRANCH=$(<packages/react-component-library/.static_storybook/branch)" >> $GITHUB_ENV
+          echo "CHROMATIC_SLUG=$(<packages/react-component-library/.static_storybook/slug)" >> $GITHUB_ENV
 
       - name: Fetch original ref
         run: |
-          git fetch origin "+$ORIGINAL_GITHUB_REF"
+          git fetch origin "+$CHROMATIC_SHA"
 
-      - uses: chromaui/action@v1
-        name: Run visual regression tests
-        env:
-          GITHUB_SHA: ${{ github.event.workflow_run.head_sha }}
-          GITHUB_REF: ${{ env.ORIGINAL_GITHUB_REF }}
-        with:
-          projectToken: ${{secrets.CHROMATIC_TOKEN}}
-          workingDir: packages/react-component-library
-          storybookBuildDir: .static_storybook
+      - name: Run visual regression tests
+        run: |
+          cd packages/react-component-library
+          npm exec --no -- chromatic --project-token=${{secrets.CHROMATIC_TOKEN}} --storybook-build-dir=.static_storybook
