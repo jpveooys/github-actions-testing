@@ -1,6 +1,6 @@
-const fs = require('fs')
+import fs from 'fs'
 
-module.exports = async ({ github, context }) => {
+export const downloadStorybookArtifact = async ({ github, context }) => {
   const allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
     owner: context.repo.owner,
     repo: context.repo.repo,

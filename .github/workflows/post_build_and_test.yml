@@ -33,8 +33,8 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const script = require('${{ github.workspace }}/scripts/github-actions/download-storybook-artifact')
-            await script({ github, context })
+            const { downloadStorybookArtifact } = await import('${{ github.workspace }}/scripts/github-actions/download-storybook-artifact.mjs')
+            await downloadStorybookArtifact({ github, context })
 
       - name: Unzip pre-built Storybook
         run: |
