@@ -18,5 +18,5 @@ module.exports = async ({ github, context }) => {
     archive_format: 'zip',
   })
 
-  fs.writeFileSync(`${github.workspace}/storybook-static.zip`, Buffer.from(download.data))
+  fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/storybook-static.zip`, Buffer.from(download.data))
 }
